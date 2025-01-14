@@ -6,13 +6,14 @@
    Overall, I hope that this project shows the lessons learnt from the subject PRG2104: Object-Oriented Programming
 
    With that, here are the current To-Do's:
-       current commit No.: 2
+       current commit No.: 3
        Completed in this commit:
-           1. Created ch.makery.address package/directory structure
-           2. Created a basic RootLayout.fxml file to test whether FXMLLoader and roots.get is working
+           1. Created StartScreenLayout.fxml
+               ~ contains New/Continue Game (call showPlayGameMenu)
+               ~ contains Level History     (call showSaveGamesMenu)
+               ~ contains Your Stats        (call showUserStatsMenu)
        Things to do in next commit:
-           1. Begin completing Menu-Navigation via the MVC directory structure
-           2. Ensure that each button functionality is well though-out as the fxml files are being devleloped.
+           Fix the fxml button's onAction method calls not resolving properly.
  */
 
 package ch.makery.address
@@ -24,22 +25,90 @@ import scalafx.scene as sfxs
 import javafx.scene as jfxs
 import scalafx.scene.Scene
 import scalafx.Includes.*
+import ch.makery.address.view.MainMenuController
+import scalafx.event.ActionEvent
+
+import scalafx.application.JFXApp3
+import scalafx.application.JFXApp3.PrimaryStage
+import scalafx.scene.Scene
+import scalafx.Includes.*
+import javafx.fxml.FXMLLoader
+import javafx.scene as jfxs
+import scalafx.scene as sfxs
 
 object MainApp extends JFXApp3:
 
-  var roots: Option[sfxs.layout.AnchorPane] = None
+  private var primaryStage: Option[PrimaryStage] = None
 
   override def start(): Unit =
-    val rootResource = getClass.getResource("view/RootLayout.fxml")
-    val loader = new FXMLLoader(rootResource)
-
-    loader.load()
-
-    roots = Option(loader.getRoot[jfxs.layout.AnchorPane])
-
-    stage = new PrimaryStage():
+    // Initialize the PrimaryStage
+    primaryStage = Some(new PrimaryStage():
       title = "CHEMIXRY: PROFESSIONAL"
-      scene = new Scene():
+      scene = new Scene() // Initially empty
+    )
+    // Show the main menu
+    showMainMenu()
+
+  def showMainMenu(): Unit =
+    loadScene("view/MainMenuLayout.fxml")
+
+  def showPlayGameMenu(): Unit =
+    loadScene("view/PlayGameMenuLayout.fxml")
+
+  def showSaveGamesMenu(): Unit =
+    loadScene("view/SaveGamesMenuLayout.fxml")
+
+  def showUserStatsMenu(): Unit =
+    loadScene("view/UserStatsMenuLayout.fxml")
+
+  private def loadScene(fxmlPath: String): Unit =
+    val resource = getClass.getResource(fxmlPath)
+    val loader = new FXMLLoader(resource)
+    loader.load()
+    // Retrieve the root layout from the FXML
+    val roots = Option(loader.getRoot[jfxs.layout.AnchorPane]) // Use the common base type Pane
+    // Update the scene of the primaryStage
+    primaryStage.foreach { stage =>
+      stage.scene = new Scene():
         root = roots.get
+    }
+
+////
+//
+//
+//
+//  object MainApp extends JFXApp3:
+//
+//    var roots: Option[sfxs.layout.AnchorPane] = None
+//
+//
+//    override def start(): Unit =
+//      val rootResource = getClass.getResource("view/MainMenuLayout.fxml")
+//      val loader = new FXMLLoader(rootResource)
+//
+//      loader.load()
+//
+//      roots = Option(loader.getRoot[jfxs.layout.AnchorPane])
+//
+//      stage = new PrimaryStage():
+//        title = "CHEMIXRY: PROFESSIONAL"
+//        scene = new Scene():
+//          root = roots.get
+//      showMainMenu()
+//
+//
+//
+//
+//
+//    def showMainMenu() =
+//      val resource = getClass.getResource("view/MainMenuLayout.fxml")
+//      val loader = new FXMLLoader(resource)
+//
+//      loader.load()
+//
+//      val roots = loader.getRoot[jfxs.layout.AnchorPane]
+//      stage.scene = new Scene():
+//        root = roots.get
+//
 
 end MainApp
