@@ -38,7 +38,7 @@ class ChemicalVial {
   // Function to pour colours into another vial
   def pourInto(otherVial: ChemicalVial): (ChemicalVial, ChemicalVial) = {
     if (!this.canPourInto(otherVial)) {
-      return (this, otherVial)
+      (this, otherVial)
     } else {
       val numColoursToPour = math.min(countConsecutiveSameColours(), otherVial.getEmptySlots())
 
