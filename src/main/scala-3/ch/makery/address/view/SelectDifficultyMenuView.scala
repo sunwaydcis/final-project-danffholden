@@ -4,12 +4,15 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{AnchorPane, VBox}
+import ch.makery.address.util.GameMethods
 
 import ch.makery.address.MainApp
+import ch.makery.address.util.GameMethods
+import ch.makery.address.view.GameView
 
 object SelectDifficultyMenuView {
   //define the display characteristics of the PlayGameMenuScene
-  def displaySelectDifficultyMenuScene(mode: String): Scene = new Scene():
+  def displaySelectDifficultyMenuScene(): Scene = new Scene():
     root = new AnchorPane():
       prefHeight = 1000
       prefWidth = 1920
@@ -41,20 +44,20 @@ object SelectDifficultyMenuView {
           // Buttons
           new Button("EXTREME MODE") {
             prefWidth = 280
-            onAction = _ => handleDifficultyButtonPressed(mode, "Extreme")
+            onAction = _ => handleDifficultyButtonPressed("Extreme")
 
             VBox.setMargin(this, Insets(160, 0, 0, 0))
           },
 
           new Button("HARD MODE") {
             prefWidth = 280
-            onAction = _ => handleDifficultyButtonPressed(mode, "Hard")
+            onAction = _ => handleDifficultyButtonPressed("Hard")
             VBox.setMargin(this, Insets(40, 0, 0, 0))
           },
 
           new Button("EASY MODE") {
             prefWidth = 280
-            onAction = _ => handleDifficultyButtonPressed(mode, "Easy")
+            onAction = _ => handleDifficultyButtonPressed("Easy")
             VBox.setMargin(this, Insets(40, 0, 0, 0))
           },
 
@@ -65,9 +68,9 @@ object SelectDifficultyMenuView {
           }
         )
 
-  def handleDifficultyButtonPressed(mode: String, difficulty: String): Unit =
-    println("Starting " ++ mode ++ ", " ++ difficulty ++ " Game")
+  def handleDifficultyButtonPressed(difficulty: String): Unit =
+    MainApp.stage.scene = GameView.displayGameScene(GameMethods.startGame(difficulty))  
 
   def handleBackButtonPressed(): Unit =
-    MainApp.stage.scene = PlayGameMenuView.displayPlayGameMenuScene()
+    MainApp.stage.scene = MainMenuView.displayMainMenuScene()
 }

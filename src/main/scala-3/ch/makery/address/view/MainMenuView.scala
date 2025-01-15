@@ -6,7 +6,7 @@ import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{AnchorPane, VBox}
 
 import ch.makery.address.MainApp
-import ch.makery.address.view.PlayGameMenuView
+import ch.makery.address.view.SelectDifficultyMenuView
 
 object MainMenuView {
   //define the display characteristics of the MainMenuScene
@@ -46,23 +46,11 @@ object MainMenuView {
             },
 
             // Buttons
-            new Button("PLAY NEW GAME / LOAD GAME") {
+            new Button("PLAY GAME") {
               prefWidth = 280
               onAction = _ => handlePlayGameButtonPressed()
 
               VBox.setMargin(this, Insets(160, 0, 0, 0))
-            },
-
-            new Button("VIEW PREVIOUS LEVELS") {
-              prefWidth = 280
-              onAction = _ => handleViewSavesButtonPressed()
-              VBox.setMargin(this, Insets(40, 0, 0, 0))
-            },
-
-            new Button("VIEW GAME STATS") {
-              prefWidth = 280
-              onAction = _ => handleViewStatsButtonPressed()
-              VBox.setMargin(this, Insets(40, 0, 0, 0))
             },
 
             new Button("QUIT") {
@@ -75,15 +63,7 @@ object MainMenuView {
 
   // Declare methods for button's onAction events
   private def handlePlayGameButtonPressed(): Unit = {
-    MainApp.stage.scene = PlayGameMenuView.displayPlayGameMenuScene()
-  }
-
-  private def handleViewSavesButtonPressed(): Unit = {
-    println("View Saves Button Pressed")
-  }
-
-  private def handleViewStatsButtonPressed(): Unit = {
-    println("View Stats Button Pressed")
+    MainApp.stage.scene = SelectDifficultyMenuView.displaySelectDifficultyMenuScene()
   }
 
   private def handleQuitButtonPressed(): Unit = {

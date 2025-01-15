@@ -10,20 +10,12 @@
        Completed in this commit:
            1. Defined the sub-menu navigation to be achieved:
                MainMenu
-                   - PlayGameMenu
-                       - Timed mode
-                           - selectDifficultyMenu(mode = "timed")
-                       - Zen mode
-                           - selectDifficultyMenu(mode = "zen")
-                       - Back
-                   - ViewGamesMenu
-                       - declared later
-                   - ViewStatsMenu
-                       - declared later
+                       - selectDifficultyMenu()
                    - Quit
            2. for selectDifficultyMenu():
                has ExtremeModeButton, HardModeButton and EasyModeButton
        Things to do in next commit:
+           Clean up the GameView scene and begin programming the interactivity between the vials and the user. Also, check for gameFinished?
  */
 
 package ch.makery.address
@@ -39,12 +31,9 @@ import scalafx.scene as sfxs
 import scalafx.stage.Stage
 
 object MainApp extends JFXApp3:
-
   override def start(): Unit =
     // Initialize the PrimaryStage
     stage = new PrimaryStage():
       title = "CHEMIXTRY: PROFESSIONAL"
       scene = MainMenuView.displayMainMenuScene()
-
-
 end MainApp
