@@ -5,12 +5,15 @@ import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{AnchorPane, VBox}
 
+import ch.makery.address.MainApp
+import ch.makery.address.view.PlayGameMenuView
+
 object MainMenuView {
   //define the display characteristics of the MainMenuScene
-  def displayMainMenuScene(): Scene = new Scene(width = 1600, height = 900):
+  def displayMainMenuScene(): Scene = new Scene():
       root = new AnchorPane():
-        prefHeight = 900
-        prefWidth = 1600
+        prefHeight = 1000
+        prefWidth = 1920
 
         children = new VBox():
           AnchorPane.setTopAnchor(this, 0)
@@ -72,7 +75,7 @@ object MainMenuView {
 
   // Declare methods for button's onAction events
   private def handlePlayGameButtonPressed(): Unit = {
-    println("Play Game Button Pressed") //test with simple print statements for now
+    MainApp.stage.scene = PlayGameMenuView.displayPlayGameMenuScene()
   }
 
   private def handleViewSavesButtonPressed(): Unit = {

@@ -6,9 +6,23 @@
    Overall, I hope that this project shows the lessons learnt from the subject PRG2104: Object-Oriented Programming
 
    With that, here are the current To-Do's:
-       current commit No.: 4
+       current commit No.: 5
        Completed in this commit:
-           1. Rewrote all .fxml files into scala code to test whether the onAction method calls for each of the buttons is working properly.
+           1. Defined the sub-menu navigation to be achieved:
+               MainMenu
+                   - PlayGameMenu
+                       - Timed mode
+                           - selectDifficultyMenu(mode = "timed")
+                       - Zen mode
+                           - selectDifficultyMenu(mode = "zen")
+                       - Back
+                   - ViewGamesMenu
+                       - declared later
+                   - ViewStatsMenu
+                       - declared later
+                   - Quit
+           2. for selectDifficultyMenu():
+               has ExtremeModeButton, HardModeButton and EasyModeButton
        Things to do in next commit:
  */
 
@@ -25,7 +39,7 @@ import scalafx.scene as sfxs
 import scalafx.stage.Stage
 
 object MainApp extends JFXApp3:
-  
+
   override def start(): Unit =
     // Initialize the PrimaryStage
     stage = new PrimaryStage():
