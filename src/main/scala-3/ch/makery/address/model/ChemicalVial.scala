@@ -9,42 +9,43 @@ class ChemicalVial {
 
   // Function to check if the vial is full
   def isFull(): Boolean = {
-    slots.forall(_ != 0)
+    !slots.contains(0)
   }
 
   // Function to check if a vial can pour colours into another vial
   def canPourInto(otherVial: ChemicalVial): Boolean = {
-    !isFull() && hasSameTopColour(otherVial) && !otherVial.isFull()
+    hasSameTopColour(otherVial) && !otherVial.isFull()
   }
 
   // Function to check if the top colour of this vial matches the top colour of another vial
   private def hasSameTopColour(otherVial: ChemicalVial): Boolean = {
-    slots.headOption.getOrElse(0) == otherVial.getTopColour()
+    slots.headOption.get == otherVial.getTopColour()
   }
 
   // Function to get the colour of the top slot (0 for empty)
   def getTopColour(): Int = {
-    slots.headOption.getOrElse(0)
+    slots.headOption.get
   }
 
   // Function to pour colours into another vial
   def pourInto(otherVial: ChemicalVial): (ChemicalVial, ChemicalVial) = {
-    if (!canPourInto(otherVial)) {
+    if (!this.canPourInto(otherVial)) {
       return (this, otherVial)
+    } else {
+      val numColoursToPour = math.min(countConsecutiveSameColours(), otherVial.getEmptySlots())
+
+      // Create new slots arrays for both vials
+      val newThisVialSlots = (this.slots.drop(numColoursToPour) ++ Array.fill(numColoursToPour)(0)).reverse
+      val newOtherVialSlots = Array.fill(numColoursToPour)(this.slots.indexOf(0)) ++ otherVial.getSlots().drop(numColoursToPour)
+
+      // Create new ChemicalVial instances
+      val newThisVial = new ChemicalVial()
+      newThisVial.setSlots(newThisVialSlots)
+      val newOtherVial = new ChemicalVial()
+      newOtherVial.setSlots(newOtherVialSlots)
+
+      (newThisVial, newOtherVial)
     }
-    val numColoursToPour = math.min(countConsecutiveSameColours(), otherVial.getEmptySlots())
-
-    // Create new slots arrays for both vials
-    val newThisVialSlots = slots.drop(numColoursToPour) ++ Array.fill(numColoursToPour)(0)
-    val newOtherVialSlots = otherVial.getSlots().take(otherVial.getEmptySlots()) ++ slots.take(numColoursToPour) ++ otherVial.getSlots().drop(otherVial.getEmptySlots())
-
-    // Create new ChemicalVial instances
-    val newThisVial = new ChemicalVial()
-    newThisVial.setSlots(newThisVialSlots)
-    val newOtherVial = new ChemicalVial()
-    newOtherVial.setSlots(newOtherVialSlots)
-
-    (newThisVial, newOtherVial)
   }
 
   // Function to add colours to this vial

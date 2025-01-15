@@ -52,9 +52,9 @@ object GameView {
     contentVBox.children += gridPane
 
     // Add each vial to the grid pane
-//    val testVial = new ChemicalVial()
-//    testVial.setSlots(Array(2, 1, 1, 1))
-//    vialsList.append(testVial)
+    //    val testVial = new ChemicalVial()
+    //    testVial.setSlots(Array(2, 1, 1, 1))
+    //    vialsList.append(testVial)
     for (i <- 0 until vialsList.length) {
       val vial = vialsList(i)
       val vialGraphic = createChemicalVialGraphic(vial, colorMap, vialsList, gridPane)
@@ -142,59 +142,28 @@ object GameView {
 
     //declare listener event for the user to select Vials.
     vialShape.onMouseClicked = (event: MouseEvent) => {
-      println("Reading input")
       selectedVialIndex match {
         case None =>
-          println("Case None")
-          println(s"selectedVialIndex: $selectedVialIndex")
           selectedVialIndex = Some(vialsList.indexOf(vial))
-          println(s"$selectedVialIndex")
         case Some(selectedIndex) =>
-          println("Case Some")
-          println(s"$selectedIndex")
           val firstVialIndex = selectedIndex
           val secondVialIndex = vialsList.indexOf(vial)
-          println(s"$secondVialIndex")
           val firstVial = vialsList(firstVialIndex)
           val secondVial = vialsList(secondVialIndex)
-          var slotsArr: ObservableBuffer[Int] = ObservableBuffer.empty
-          for (slot <- firstVial.getSlots())
-            slotsArr += slot
-          println(slotsArr)
-          slotsArr = ObservableBuffer.empty
-          for (slot <- secondVial.getSlots())
-            slotsArr += slot
-          println(slotsArr)
-          slotsArr = ObservableBuffer.empty
+
           val (updatedFirstVial, updatedSecondVial) = firstVial.pourInto(secondVial)
-          for (slot <- updatedFirstVial.getSlots())
-            slotsArr += slot
-          println(slotsArr)
-          slotsArr = ObservableBuffer.empty
-          for (slot <- updatedSecondVial.getSlots())
-            slotsArr += slot
-          println(slotsArr)
-          slotsArr = ObservableBuffer.empty
+
           // Update the vialsList with the updated vials
           vialsList.update(firstVialIndex, updatedFirstVial)
           vialsList.update(secondVialIndex, updatedSecondVial)
 
-//           //Update the UI (redraw only the affected vials)
-//          updateVialGraphics(vialsList, gridPane, colorMap)
+          MainApp.stage.scene = GameView.displayGameScene(vialsList, colorMap)
+
+
           selectedVialIndex = None
-          MainApp.stage.scene = displayGameScene(vialsList, colorMap)
       }
     }
 
     vialShape
   }
-
-//  private def updateVialGraphics(vialsList: ObservableBuffer[ChemicalVial], gridPane: GridPane, colorMap: Map[Int, Color]): Unit = {
-//    for (i <- 0 until vialsList.length) {
-//      val vial = vialsList(i)
-//      val vialGraphic = createChemicalVialGraphic(vial, colorMap, vialsList, gridPane)
-//      gridPane.children.remove(i) // Remove the old vial graphic
-//      gridPane.add(vialGraphic, i % 4, i / 4) // Add the updated vial graphic
-//    }
-//  }
 }
