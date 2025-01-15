@@ -12,19 +12,27 @@ class ChemicalVial {
     !slots.contains(0)
   }
 
-  // Function to check if a vial can pour colours into another vial
-  def canPourInto(otherVial: ChemicalVial): Boolean = {
-    hasSameTopColour(otherVial) && !otherVial.isFull()
+  // Function to get the number of empty slots in the vial
+  def getEmptySlots(): Int = {
+    slots.count(_ == 0)
+  }
+
+  // Function to get topMost color
+  def getTopMostColor(slots: Array[Int]): Int = {
+    slots.drop(this.getEmptySlots()).head
   }
 
   // Function to check if the top colour of this vial matches the top colour of another vial
   private def hasSameTopColour(otherVial: ChemicalVial): Boolean = {
-    slots.headOption.get == otherVial.getTopColour()
+    if (otherVial.getEmptySlots() == 4) {
+      true
+    }
+    else getTopMostColor(slots) == getTopMostColor(otherVial.getSlots())
   }
 
-  // Function to get the colour of the top slot (0 for empty)
-  def getTopColour(): Int = {
-    slots.headOption.get
+  // Function to check if a vial can pour colours into another vial
+  def canPourInto(otherVial: ChemicalVial): Boolean = {
+    hasSameTopColour(otherVial) && !otherVial.isFull()
   }
 
   // Function to pour colours into another vial
@@ -51,7 +59,7 @@ class ChemicalVial {
   // Function to add colours to this vial
   private def addColours(colours: Array[Int]): Unit = {
     var i = 0
-    while (i < colours.length && !isFull()) {
+    while (i < colours.length && !this.isFull()) {
       slots(i) = colours(i)
       i += 1
     }
@@ -68,10 +76,7 @@ class ChemicalVial {
     count
   }
 
-  // Function to get the number of empty slots in the vial
-  def getEmptySlots(): Int = {
-    slots.count(_ == 0)
-  }
+
 
   // Getters and Setters (for testing and potential future use)
   def getSlots(): Array[Int] = slots
