@@ -6,12 +6,12 @@
    Overall, I hope that this project shows the lessons learnt from the subject PRG2104: Object-Oriented Programming
 
    With that, here are the current To-Do's:
-       current commit No.: 6
+       current commit No.: 7
        Completed in this commit:
-           Cleaned up displayGameScene()'s Scene
-           Ensured that each colour has a max of 4 slots in the entire game
+           Fixed the randomisation of the vials for a startGame() by employing allSlots.remove(Random.nextInt...)
+           Also fixed the colours being way too dark. Even though they are more similar now, because generally they are brighter, they are still distinguishable.
        Things to do in next commit:
-           Fix scrambling of the vials for a startGame()
+           Employ interactivity for user selection.
  */
 
 package ch.makery.address

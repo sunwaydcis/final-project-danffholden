@@ -14,7 +14,7 @@ object GameView {
 
   // Define a map to associate integer color values with actual color objects
   private def assignColoursToSlotInt(vialsList: ObservableBuffer[ChemicalVial]): Map[Int, Color] =
-    (1 to (vialsList.length - 1)).map(i => i -> Color.rgb(scala.util.Random.nextInt(256), scala.util.Random.nextInt(256), scala.util.Random.nextInt(256))).toMap
+    (1 to (vialsList.length - 1)).map(i => i -> Color.rgb(scala.util.Random.nextInt(192) + 64, scala.util.Random.nextInt(192) + 64, scala.util.Random.nextInt(192) + 64)).toMap
 
   def displayGameScene(vialsList: ObservableBuffer[ChemicalVial]): Scene = {
     val colorMap: Map[Int, Color] = assignColoursToSlotInt(vialsList)

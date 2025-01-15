@@ -30,7 +30,7 @@ object GameMethods {
     // Create vials, assigning slots from the shuffled list
     for (_ <- 1 to numOfColours) {
       vials += new ChemicalVial {
-        setSlots(Array(allSlots.remove(0), allSlots.remove(0), allSlots.remove(0), allSlots.remove(0)))
+        setSlots(Array(allSlots.remove(Random.nextInt(allSlots.length)), allSlots.remove(Random.nextInt(allSlots.length)), allSlots.remove(Random.nextInt(allSlots.length)), allSlots.remove(Random.nextInt(allSlots.length))))
       }
     }
 
