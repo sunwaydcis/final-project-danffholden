@@ -9,16 +9,17 @@ import scalafx.scene.layout.{AnchorPane, GridPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Line, LineTo, MoveTo, Path, Rectangle}
 import ch.makery.address.util.GameMethods
+import scalafx.scene.input.MouseEvent
+import scalafx.Includes.*
+import ch.makery.address.MainApp
 
 object GameView {
+  //a value to extract the index of the ChemicalVial during the onClicked MouseEvent listener for the first vial
+  private var selectedVialIndex: Option[Int] = None
 
   // Define a map to associate integer color values with actual color objects
-  private def assignColoursToSlotInt(vialsList: ObservableBuffer[ChemicalVial]): Map[Int, Color] =
-    (1 to (vialsList.length - 1)).map(i => i -> Color.rgb(scala.util.Random.nextInt(192) + 64, scala.util.Random.nextInt(192) + 64, scala.util.Random.nextInt(192) + 64)).toMap
 
-  def displayGameScene(vialsList: ObservableBuffer[ChemicalVial]): Scene = {
-    val colorMap: Map[Int, Color] = assignColoursToSlotInt(vialsList)
-
+  def displayGameScene(vialsList: ObservableBuffer[ChemicalVial], colorMap: Map[Int, Color]): Scene = {
     val scene = new Scene()
     val root = new AnchorPane()
     scene.root = root
@@ -50,17 +51,16 @@ object GameView {
     }
     contentVBox.children += gridPane
 
-    // Calculate the number of rows and columns for the grid
-//    val numVials = vialsList.length
-//    val numCols = math.ceil(math.sqrt(numVials)).toInt
-//    val numRows = (numVials + numCols - 1) / numCols
-
     // Add each vial to the grid pane
+//    val testVial = new ChemicalVial()
+//    testVial.setSlots(Array(2, 1, 1, 1))
+//    vialsList.append(testVial)
     for (i <- 0 until vialsList.length) {
       val vial = vialsList(i)
-      val vialGraphic = createChemicalVialGraphic(vial, colorMap)
+      val vialGraphic = createChemicalVialGraphic(vial, colorMap, vialsList, gridPane)
       gridPane.add(vialGraphic, i % 4, i / 4)
     }
+
 
     // Add the VBox to the AnchorPane with constraints to center it
     AnchorPane.setTopAnchor(contentVBox, 0.0)
@@ -72,7 +72,7 @@ object GameView {
     scene
   }
 
-  private def createChemicalVialGraphic(vial: ChemicalVial, colorMap: Map[Int, Color]): Group = {
+  private def createChemicalVialGraphic(vial: ChemicalVial, colorMap: Map[Int, Color], vialsList: ObservableBuffer[ChemicalVial], gridPane: GridPane): Group = {
     // Define the vial shape with lines
     val leftRim = new Line {
       startX = 5
@@ -140,6 +140,61 @@ object GameView {
       yOffset -= 50.0
     }
 
+    //declare listener event for the user to select Vials.
+    vialShape.onMouseClicked = (event: MouseEvent) => {
+      println("Reading input")
+      selectedVialIndex match {
+        case None =>
+          println("Case None")
+          println(s"selectedVialIndex: $selectedVialIndex")
+          selectedVialIndex = Some(vialsList.indexOf(vial))
+          println(s"$selectedVialIndex")
+        case Some(selectedIndex) =>
+          println("Case Some")
+          println(s"$selectedIndex")
+          val firstVialIndex = selectedIndex
+          val secondVialIndex = vialsList.indexOf(vial)
+          println(s"$secondVialIndex")
+          val firstVial = vialsList(firstVialIndex)
+          val secondVial = vialsList(secondVialIndex)
+          var slotsArr: ObservableBuffer[Int] = ObservableBuffer.empty
+          for (slot <- firstVial.getSlots())
+            slotsArr += slot
+          println(slotsArr)
+          slotsArr = ObservableBuffer.empty
+          for (slot <- secondVial.getSlots())
+            slotsArr += slot
+          println(slotsArr)
+          slotsArr = ObservableBuffer.empty
+          val (updatedFirstVial, updatedSecondVial) = firstVial.pourInto(secondVial)
+          for (slot <- updatedFirstVial.getSlots())
+            slotsArr += slot
+          println(slotsArr)
+          slotsArr = ObservableBuffer.empty
+          for (slot <- updatedSecondVial.getSlots())
+            slotsArr += slot
+          println(slotsArr)
+          slotsArr = ObservableBuffer.empty
+          // Update the vialsList with the updated vials
+          vialsList.update(firstVialIndex, updatedFirstVial)
+          vialsList.update(secondVialIndex, updatedSecondVial)
+
+//           //Update the UI (redraw only the affected vials)
+//          updateVialGraphics(vialsList, gridPane, colorMap)
+          selectedVialIndex = None
+          MainApp.stage.scene = displayGameScene(vialsList, colorMap)
+      }
+    }
+
     vialShape
   }
+
+//  private def updateVialGraphics(vialsList: ObservableBuffer[ChemicalVial], gridPane: GridPane, colorMap: Map[Int, Color]): Unit = {
+//    for (i <- 0 until vialsList.length) {
+//      val vial = vialsList(i)
+//      val vialGraphic = createChemicalVialGraphic(vial, colorMap, vialsList, gridPane)
+//      gridPane.children.remove(i) // Remove the old vial graphic
+//      gridPane.add(vialGraphic, i % 4, i / 4) // Add the updated vial graphic
+//    }
+//  }
 }

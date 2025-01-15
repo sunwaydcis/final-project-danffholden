@@ -28,16 +28,23 @@ class ChemicalVial {
   }
 
   // Function to pour colours into another vial
-  def pourInto(otherVial: ChemicalVial): Int = {
+  def pourInto(otherVial: ChemicalVial): (ChemicalVial, ChemicalVial) = {
     if (!canPourInto(otherVial)) {
-      return 0
+      return (this, otherVial)
     }
     val numColoursToPour = math.min(countConsecutiveSameColours(), otherVial.getEmptySlots())
-    // Update the slots of this vial
-    slots = slots.drop(numColoursToPour) ++ Array.fill(numColoursToPour)(0)
-    // Update the slots of the other vial
-    otherVial.addColours(slots.take(numColoursToPour))
-    numColoursToPour
+
+    // Create new slots arrays for both vials
+    val newThisVialSlots = slots.drop(numColoursToPour) ++ Array.fill(numColoursToPour)(0)
+    val newOtherVialSlots = otherVial.getSlots().take(otherVial.getEmptySlots()) ++ slots.take(numColoursToPour) ++ otherVial.getSlots().drop(otherVial.getEmptySlots())
+
+    // Create new ChemicalVial instances
+    val newThisVial = new ChemicalVial()
+    newThisVial.setSlots(newThisVialSlots)
+    val newOtherVial = new ChemicalVial()
+    newOtherVial.setSlots(newOtherVialSlots)
+
+    (newThisVial, newOtherVial)
   }
 
   // Function to add colours to this vial
@@ -67,6 +74,7 @@ class ChemicalVial {
 
   // Getters and Setters (for testing and potential future use)
   def getSlots(): Array[Int] = slots
+
   def setSlots(newSlots: Array[Int]): Unit = {
     if (newSlots.length == slotsNum) {
       slots = newSlots

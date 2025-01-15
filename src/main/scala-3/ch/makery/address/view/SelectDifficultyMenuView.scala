@@ -5,10 +5,12 @@ import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{AnchorPane, VBox}
 import ch.makery.address.util.GameMethods
-
 import ch.makery.address.MainApp
+import ch.makery.address.model.ChemicalVial
 import ch.makery.address.util.GameMethods
 import ch.makery.address.view.GameView
+import scalafx.collections.ObservableBuffer
+import scalafx.scene.paint.Color
 
 object SelectDifficultyMenuView {
   //define the display characteristics of the PlayGameMenuScene
@@ -68,19 +70,16 @@ object SelectDifficultyMenuView {
           }
         )
 
+  private def assignColoursToSlotInt(vialsList: ObservableBuffer[ChemicalVial]): Map[Int, Color] =
+    (1 to (vialsList.length - 1)).map(i => i -> Color.rgb(scala.util.Random.nextInt(192) + 64, scala.util.Random.nextInt(192) + 64, scala.util.Random.nextInt(192) + 64)).toMap
+
+
   def handleDifficultyButtonPressed(difficulty: String): Unit =
     val vialsBuffer = GameMethods.startGame(difficulty)
-    MainApp.stage.scene = GameView.displayGameScene(vialsBuffer)
-    var count = 0
-    for (vial <- vialsBuffer) {
-      println(s"Vial $count")
-      count += 1
-      for (slot <- vial.getSlots()) {
-        print(s"$slot, ")
-      }
-    println("")
+    val colorMap = assignColoursToSlotInt(vialsBuffer)
+    MainApp.stage.scene = GameView.displayGameScene(vialsBuffer, colorMap)
     }
 
   def handleBackButtonPressed(): Unit =
     MainApp.stage.scene = MainMenuView.displayMainMenuScene()
-}
+  
