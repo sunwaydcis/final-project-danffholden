@@ -34,7 +34,7 @@ object SelectDifficultyMenuView {
 
           // Description label
           new Label(
-            "Mode chosen... select your difficulty"
+            "Choose your difficulty!"
           ) {
             alignmentInParent = Pos.Center
             wrapText = true // Allows text wrapping
@@ -69,7 +69,17 @@ object SelectDifficultyMenuView {
         )
 
   def handleDifficultyButtonPressed(difficulty: String): Unit =
-    MainApp.stage.scene = GameView.displayGameScene(GameMethods.startGame(difficulty))  
+    val vialsBuffer = GameMethods.startGame(difficulty)
+    MainApp.stage.scene = GameView.displayGameScene(vialsBuffer)
+    var count = 0
+    for (vial <- vialsBuffer) {
+      println(s"Vial $count")
+      count += 1
+      for (slot <- vial.getSlots()) {
+        print(s"$slot, ")
+      }
+    println("")
+    }
 
   def handleBackButtonPressed(): Unit =
     MainApp.stage.scene = MainMenuView.displayMainMenuScene()

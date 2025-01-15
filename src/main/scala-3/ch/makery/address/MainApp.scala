@@ -6,16 +6,12 @@
    Overall, I hope that this project shows the lessons learnt from the subject PRG2104: Object-Oriented Programming
 
    With that, here are the current To-Do's:
-       current commit No.: 5
+       current commit No.: 6
        Completed in this commit:
-           1. Defined the sub-menu navigation to be achieved:
-               MainMenu
-                       - selectDifficultyMenu()
-                   - Quit
-           2. for selectDifficultyMenu():
-               has ExtremeModeButton, HardModeButton and EasyModeButton
+           Cleaned up displayGameScene()'s Scene
+           Ensured that each colour has a max of 4 slots in the entire game
        Things to do in next commit:
-           Clean up the GameView scene and begin programming the interactivity between the vials and the user. Also, check for gameFinished?
+           Fix scrambling of the vials for a startGame()
  */
 
 package ch.makery.address
@@ -23,12 +19,6 @@ package ch.makery.address
 import ch.makery.address.view.MainMenuView
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
-import scalafx.scene.Scene
-import scalafx.Includes.*
-import javafx.fxml.FXMLLoader
-import javafx.scene as jfxs
-import scalafx.scene as sfxs
-import scalafx.stage.Stage
 
 object MainApp extends JFXApp3:
   override def start(): Unit =

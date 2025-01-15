@@ -2,10 +2,10 @@ package ch.makery.address.model
 
 class ChemicalVial {
   // Define the number of slots a vial has
-  private val NUM_SLOTS = 4
+  private val slotsNum = 4
 
   // Array to store the colours of the vial slots as integers (0 for empty)
-  private var slots: Array[Int] = Array.fill(NUM_SLOTS)(0)
+  private var slots: Array[Int] = Array.fill(slotsNum)(0)
 
   // Function to check if the vial is full
   def isFull(): Boolean = {
@@ -53,7 +53,7 @@ class ChemicalVial {
   private def countConsecutiveSameColours(): Int = {
     var count = 1
     var i = 1
-    while (i < NUM_SLOTS && slots(i) == slots.headOption.getOrElse(0)) {
+    while (i < slotsNum && slots(i) == slots.headOption.getOrElse(0)) {
       count += 1
       i += 1
     }
@@ -68,7 +68,7 @@ class ChemicalVial {
   // Getters and Setters (for testing and potential future use)
   def getSlots(): Array[Int] = slots
   def setSlots(newSlots: Array[Int]): Unit = {
-    if (newSlots.length == NUM_SLOTS) {
+    if (newSlots.length == slotsNum) {
       slots = newSlots
     } else {
       throw new IllegalArgumentException("Invalid number of slots for the vial.")

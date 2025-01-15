@@ -5,7 +5,7 @@ import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.{Group, Scene}
 import scalafx.scene.control.Label
-import scalafx.scene.layout.{AnchorPane, GridPane}
+import scalafx.scene.layout.{AnchorPane, GridPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Line, LineTo, MoveTo, Path, Rectangle}
 import ch.makery.address.util.GameMethods
@@ -14,7 +14,7 @@ object GameView {
 
   // Define a map to associate integer color values with actual color objects
   private def assignColoursToSlotInt(vialsList: ObservableBuffer[ChemicalVial]): Map[Int, Color] =
-    (1 to (vialsList.length - 2)).map(i => i -> Color.rgb(scala.util.Random.nextInt(256), scala.util.Random.nextInt(256), scala.util.Random.nextInt(256))).toMap
+    (1 to (vialsList.length - 1)).map(i => i -> Color.rgb(scala.util.Random.nextInt(256), scala.util.Random.nextInt(256), scala.util.Random.nextInt(256))).toMap
 
   def displayGameScene(vialsList: ObservableBuffer[ChemicalVial]): Scene = {
     val colorMap: Map[Int, Color] = assignColoursToSlotInt(vialsList)
@@ -26,86 +26,115 @@ object GameView {
     root.prefHeight = 1000
     root.prefWidth = 1920
 
+
+    // Create a VBox to hold the title and grid pane
+    val contentVBox = new VBox() {
+      spacing = 10.0 // Add spacing between elements
+      alignment = Pos.TopCenter
+    }
+
     // Title label
     val titleLabel = new Label("CHEMIXTRY: PROFESSIONAL") {
-      alignmentInParent = Pos.Center
+      alignment = Pos.TopCenter
       style = "-fx-font-size: 24px; -fx-font-weight: bold;" // Optional styling
-      AnchorPane.setTopAnchor(this, 10)
-      AnchorPane.setLeftAnchor(this, 10)
+      VBox.setMargin(this, Insets(120, 0, 0, 0))
     }
-    root.children = titleLabel
+    contentVBox.children = titleLabel
 
     // Create a GridPane to hold the chemical vials
     val gridPane = new GridPane() {
-      hgap = 10
-      vgap = 10
-      AnchorPane.setTopAnchor(this, 60)
-      AnchorPane.setLeftAnchor(this, 10)
-      AnchorPane.setRightAnchor(this, 10)
-      AnchorPane.setBottomAnchor(this, 10)
+      hgap = 36
+      vgap = 12
+      VBox.setMargin(this, Insets(80, 0, 0, 0))
+      alignment = Pos.TopCenter
     }
-    root.children += gridPane
+    contentVBox.children += gridPane
 
     // Calculate the number of rows and columns for the grid
-    val numVials = vialsList.length
-    val numCols = math.ceil(math.sqrt(numVials)).toInt
-    val numRows = (numVials + numCols - 1) / numCols
+//    val numVials = vialsList.length
+//    val numCols = math.ceil(math.sqrt(numVials)).toInt
+//    val numRows = (numVials + numCols - 1) / numCols
 
     // Add each vial to the grid pane
-    for (i <- 0 until numVials; j <- 0 until numRows) {
-      val vialIndex = i + j * numCols
-      if (vialIndex < numVials) {
-        val vial = vialsList(vialIndex)
-        val vialGraphic = createChemicalVialGraphic(vial, colorMap)
-        gridPane.add(vialGraphic, j, i)
-      }
+    for (i <- 0 until vialsList.length) {
+      val vial = vialsList(i)
+      val vialGraphic = createChemicalVialGraphic(vial, colorMap)
+      gridPane.add(vialGraphic, i % 4, i / 4)
     }
+
+    // Add the VBox to the AnchorPane with constraints to center it
+    AnchorPane.setTopAnchor(contentVBox, 0.0)
+    AnchorPane.setLeftAnchor(contentVBox, 0.0)
+    AnchorPane.setRightAnchor(contentVBox, 0.0)
+    AnchorPane.setBottomAnchor(contentVBox, 0.0)
+    root.children = contentVBox
 
     scene
   }
 
   private def createChemicalVialGraphic(vial: ChemicalVial, colorMap: Map[Int, Color]): Group = {
     // Define the vial shape with lines
-    val leftLine = new Line {
-      startX = 50.0
-      startY = 50.0
-      endX = 50.0
-      endY = 150.0
+    val leftRim = new Line {
+      startX = 5
+      startY = 0
+      endX = 0
+      endY = 5
       stroke = Color.Black
-      strokeWidth = 2.0
+      strokeWidth = 4.0
+    }
+
+    val rightRim = new Line {
+      startX = 55
+      startY = 0
+      endX = 60
+      endY = 5
+      stroke = Color.Black
+      strokeWidth = 4.0
+    }
+
+
+    val leftLine = new Line {
+      startX = 5
+      startY = 0
+      endX = 5
+      endY = 220
+      stroke = Color.Black
+      strokeWidth = 4.0
     }
 
     val rightLine = new Line {
-      startX = 100.0
-      startY = 50.0
-      endX = 100.0
-      endY = 150.0
+      startX = 55
+      startY = 0
+      endX = 55
+      endY = 220
       stroke = Color.Black
-      strokeWidth = 2.0
+      strokeWidth = 4.0
     }
 
     val bottomLine = new Line {
-      startX = 50.0
-      startY = 150.0
-      endX = 100.0
-      endY = 150.0
+      startX = 5
+      startY = 220
+      endX = 55
+      endY = 220
       stroke = Color.Black
-      strokeWidth = 2.0
+      strokeWidth = 4
     }
 
     // Group the lines to form the vial shape
     val vialShape = new Group()
-    vialShape.children ++= Seq(leftLine, rightLine, bottomLine)
+    vialShape.children ++= Seq(leftRim, rightRim, leftLine, rightLine, bottomLine)
 
     // Add colored rectangles for each color in the vial
-    var yOffset = 150.0 // Start at the bottom of the vial
+    var yOffset = 218.0 // Start at the bottom of the vial
     for (color <- vial.getSlots().filter(_ != 0)) {
       val colorRect = new Rectangle {
-        x = 50.0
+        x = 7
         y = yOffset - 50.0
-        width = 50.0 // Adjust width to fit within the vial
+        width = 46.0 // Adjust width to fit within the vial
         height = 50.0
         fill = colorMap.getOrElse(color, Color.Black) // Use the passed-in colorMap
+        stroke = Color.Black
+        strokeWidth = 2
       }
       vialShape.children.add(colorRect) // Add rectangles as children of the Group
       yOffset -= 50.0

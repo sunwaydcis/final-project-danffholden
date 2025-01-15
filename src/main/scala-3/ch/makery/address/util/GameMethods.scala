@@ -2,6 +2,7 @@ package ch.makery.address.util
 
 import ch.makery.address.model.ChemicalVial
 import scalafx.collections.ObservableBuffer
+
 import scala.util.Random
 
 object GameMethods {
@@ -19,10 +20,17 @@ object GameMethods {
 
   def scrambleInitVials(numOfColours: Int, numOfEmpty: Int): ObservableBuffer[ChemicalVial] = {
     val vials = ObservableBuffer.empty[ChemicalVial]
-    // Create vials with random colours
+
+    // Create a list of all possible slots (4 occurrences of each color)
+    val allSlots = (1 to numOfColours).flatMap(color => List.fill(4)(color)).toBuffer
+
+    // Shuffle the list of slots randomly
+    Random.shuffle(allSlots)
+
+    // Create vials, assigning slots from the shuffled list
     for (_ <- 1 to numOfColours) {
       vials += new ChemicalVial {
-        setSlots(Array.fill(4)(Random.nextInt(numOfColours) + 1)) // Assign random colours (1 to numOfColours)
+        setSlots(Array(allSlots.remove(0), allSlots.remove(0), allSlots.remove(0), allSlots.remove(0)))
       }
     }
 
@@ -31,10 +39,6 @@ object GameMethods {
       vials += new ChemicalVial
     }
 
-    // Shuffle the vials
-    Random.shuffle(vials)
     vials
   }
-  
-  
 }
